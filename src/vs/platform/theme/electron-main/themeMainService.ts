@@ -21,6 +21,8 @@ export interface IThemeMainService {
 	_serviceBrand: any;
 
 	getBackgroundColor(): string;
+
+	setBackgroundColor(background: string): void;
 }
 
 export class ThemeMainService implements IThemeMainService {
@@ -34,6 +36,10 @@ export class ThemeMainService implements IThemeMainService {
 				this.storeBackgroundColor(JSON.parse(broadcast));
 			}
 		});
+	}
+
+	public setBackgroundColor(background: string): void {
+		this.stateService.setItem(THEME_BG_STORAGE_KEY, background);
 	}
 
 	private storeBackgroundColor(data: { baseTheme: string, background: string }): void {

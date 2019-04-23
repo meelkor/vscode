@@ -419,6 +419,7 @@ class MinimapBuffers {
 		const backgroundR = background.r;
 		const backgroundG = background.g;
 		const backgroundB = background.b;
+		const backgroundA = background.a;
 
 		const result = new Uint8ClampedArray(WIDTH * HEIGHT * 4);
 		let offset = 0;
@@ -427,7 +428,7 @@ class MinimapBuffers {
 				result[offset] = backgroundR;
 				result[offset + 1] = backgroundG;
 				result[offset + 2] = backgroundB;
-				result[offset + 3] = 255;
+				result[offset + 3] = backgroundA;
 				offset += 4;
 			}
 		}

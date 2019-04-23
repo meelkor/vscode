@@ -30,6 +30,7 @@ interface IConfiguration extends IWindowsConfiguration {
 
 export class SettingsChangeRelauncher extends Disposable implements IWorkbenchContribution {
 
+	private transparent: boolean;
 	private titleBarStyle: 'native' | 'custom';
 	private nativeTabs: boolean;
 	private nativeFullScreen: boolean;
@@ -56,6 +57,12 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 
 	private onConfigurationChange(config: IConfiguration, notify: boolean): void {
 		let changed = false;
+
+		// Linux transparency
+		if (isLinux && config.window && typeof config.window.transparent === 'boolean' && config.window.transparent !== this.transparent) {
+			this.transparent = config.window.transparent;
+			changed = true;
+		}
 
 		// Titlebar style
 		if (config.window && config.window.titleBarStyle !== this.titleBarStyle && (config.window.titleBarStyle === 'native' || config.window.titleBarStyle === 'custom')) {

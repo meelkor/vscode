@@ -110,6 +110,11 @@ export class CodeWindow extends Disposable implements ICodeWindow {
 		this.registerListeners();
 	}
 
+	private setTransparentInfo(options: Electron.BrowserWindowConstructorOptions): void {
+		options.backgroundColor = '#00000000';
+		this.themeMainService.setBackgroundColor('transparent');
+	}
+
 	private createBrowserWindow(config: IWindowCreationOptions): void {
 
 		// Load window state
@@ -138,11 +143,18 @@ export class CodeWindow extends Disposable implements ICodeWindow {
 			}
 		};
 
-		if (isLinux) {
-			options.icon = path.join(this.environmentService.appRoot, 'resources/linux/code.png'); // Windows and Mac are better off using the embedded icon(s)
-		}
 
 		const windowConfig = this.configurationService.getValue<IWindowSettings>('window');
+
+		if (isLinux) {
+			options.icon = path.join(this.environmentService.appRoot, 'resources/linux/code.png'); // Windows and Mac are better off using the embedded icon(s)
+
+			// Make sure hardware acceleration is actually disabled.
+			options.transparent = windowConfig && windowConfig.transparent;
+			if (options.transparent) {
+				this.setTransparentInfo(options);
+			}
+		}
 
 		if (isMacintosh && !this.useNativeFullScreen()) {
 			options.fullscreenable = false; // enables simple fullscreen mode

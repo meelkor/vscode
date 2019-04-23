@@ -430,6 +430,7 @@ export class TerminalInstance implements ITerminalInstance {
 		const font = this._configHelper.getFont(undefined, true);
 		const config = this._configHelper.config;
 		this._xterm = new Terminal({
+			allowTransparency: true,
 			scrollback: config.scrollback,
 			theme: this._getXtermTheme(),
 			drawBoldTextInBrightColors: config.drawBoldTextInBrightColors,
