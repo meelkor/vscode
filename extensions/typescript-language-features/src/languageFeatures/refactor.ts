@@ -123,16 +123,6 @@ const Extract_Constant = Object.freeze<CodeActionKind>({
 	matches: refactor => refactor.name.startsWith('constant_')
 });
 
-const Extract_Type = Object.freeze<CodeActionKind>({
-	kind: vscode.CodeActionKind.RefactorExtract.append('type'),
-	matches: refactor => refactor.name.startsWith('Extract to type alias')
-});
-
-const Extract_Interface = Object.freeze<CodeActionKind>({
-	kind: vscode.CodeActionKind.RefactorExtract.append('interface'),
-	matches: refactor => refactor.name.startsWith('Extract to interface')
-});
-
 const Move_NewFile = Object.freeze<CodeActionKind>({
 	kind: vscode.CodeActionKind.Refactor.append('move').append('newFile'),
 	matches: refactor => refactor.name.startsWith('Move to a new file')
@@ -164,10 +154,6 @@ const Rewrite_Property_GenerateAccessors = Object.freeze<CodeActionKind>({
 });
 
 const allKnownCodeActionKinds = [
-	Extract_Function,
-	Extract_Constant,
-	Extract_Type,
-	Extract_Interface,
 	Move_NewFile,
 	Rewrite_Import,
 	Rewrite_Export,
@@ -403,30 +389,9 @@ class TypeScriptRefactorProvider implements vscode.CodeActionProvider<TsCodeActi
 	}
 
 	private static isPreferred(
-		action: Proto.RefactorActionInfo,
-		allActions: readonly Proto.RefactorActionInfo[],
+		_action: Proto.RefactorActionInfo,
+		_allActions: readonly Proto.RefactorActionInfo[],
 	): boolean {
-		if (Extract_Constant.matches(action)) {
-			// Only mark the action with the lowest scope as preferred
-			const getScope = (name: string) => {
-				const scope = name.match(/scope_(\d)/)?.[1];
-				return scope ? +scope : undefined;
-			};
-			const scope = getScope(action.name);
-			if (typeof scope !== 'number') {
-				return false;
-			}
-
-			return allActions
-				.filter(otherAtion => otherAtion !== action && Extract_Constant.matches(otherAtion))
-				.every(otherAction => {
-					const otherScope = getScope(otherAction.name);
-					return typeof otherScope === 'number' ? scope < otherScope : true;
-				});
-		}
-		if (Extract_Type.matches(action) || Extract_Interface.matches(action)) {
-			return true;
-		}
 		return false;
 	}
 
