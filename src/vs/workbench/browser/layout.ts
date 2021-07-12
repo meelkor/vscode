@@ -329,7 +329,7 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 				this.workbenchGrid.setViewVisible(this.titleBarPartView, this.isVisible(Parts.TITLEBAR_PART));
 			}
 			// The menu bar toggles the title bar in full screen for toggle and classic settings
-			else if (this.state.fullscreen && (this.state.menuBar.visibility === 'toggle' || this.state.menuBar.visibility === 'classic')) {
+			else if (this.state.menuBar.visibility === 'toggle' || this.state.menuBar.visibility === 'classic') {
 				this.workbenchGrid.setViewVisible(this.titleBarPartView, this.isVisible(Parts.TITLEBAR_PART));
 			}
 
@@ -942,11 +942,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 				// macOS desktop does not need a title bar when full screen
 				if (isMacintosh && isNative) {
 					return !this.state.fullscreen;
-				}
-
-				// non-fullscreen native must show the title bar
-				if (isNative && !this.state.fullscreen) {
-					return true;
 				}
 
 				// remaining behavior is based on menubar visibility
